@@ -6,3 +6,4 @@ edition = "2018"
 
 [dependencies]
 thermal_printer = { version = "0.1.1", path = "./libraries/thermal_printer" }
+nb = { version = "0.1.2" }

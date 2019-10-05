@@ -1,4 +1,7 @@
 extern crate thermal_printer;
+extern crate nb;
+
+use std::io::Write;
 
 use thermal_printer::prelude::*;
 
@@ -12,23 +15,35 @@ impl thermal_printer::prelude::_thermal_printer_serial_Write<u8> for File
 {
     type Error = std::io::Error;
 
-    fn write(&mut self, word: u8) -> Result<(), Self::Error> {
-        self.write(word);
+    fn write(&mut self, word: u8) -> nb::Result<(), Self::Error> {
+        match self.0.write(&[word]) {
+            Ok(1) => Ok(()),
+            Ok(_) => Err(nb::Error::Other(std::io::Error::from(std::io::ErrorKind::Other))),
+            Err(err) => Err(nb::Error::Other(err))
+        }
     }
 
-    fn flush(&mut self) -> Result<(), Self::Error> {
-        Ok()
+    fn flush(&mut self) -> nb::Result<(), Self::Error> {
+        match self.0.flush() {
+            Ok(()) => Ok(()),
+            Err(err) => Err(nb::Error::Other(err))
+        }
     }
 }
 
 
 fn main() {
-    let mut printer_handle = match File::open("/dev/usb/lp0") {
+
+    let printer_handle = match std::fs::File::open("/dev/usb/lp0") {
         Ok(file) => file,
         Err(err) => panic!("Unable to talk to printer: {}", err),
     };
 
-    let mut printer = ThermalPrinter::new(printer_handle);
+    let mut printer = ThermalPrinter::new(File(printer_handle));
+
+    //printer.write("Hello World!"); // why doesn't this exist?!
+    printer.feed_n(3).unwrap();
+    printer.flush().unwrap();
 
     println!("Hello, world!");
 }

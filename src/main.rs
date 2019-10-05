@@ -16,9 +16,9 @@ impl thermal_printer::prelude::_thermal_printer_serial_Write<u8> for File
     type Error = std::io::Error;
 
     fn write(&mut self, word: u8) -> nb::Result<(), Self::Error> {
-        match self.0.write(&[word]) {
-            Ok(1) => Ok(()),
-            Ok(_) => Err(nb::Error::Other(std::io::Error::from(std::io::ErrorKind::Other))),
+        //match std::io::Write::write_all(&mut self.0, &[word]) { // without use std::io::Write
+        match self.0.write_all(&[word]) {
+            Ok(()) => Ok(()),
             Err(err) => Err(nb::Error::Other(err))
         }
     }
@@ -34,7 +34,7 @@ impl thermal_printer::prelude::_thermal_printer_serial_Write<u8> for File
 
 fn main() {
 
-    let printer_handle = match std::fs::File::open("/dev/usb/lp0") {
+    let printer_handle = match std::fs::OpenOptions::new().write(true).open("/dev/usb/lp0") {
         Ok(file) => file,
         Err(err) => panic!("Unable to talk to printer: {}", err),
     };
@@ -42,8 +42,7 @@ fn main() {
     let mut printer = ThermalPrinter::new(File(printer_handle));
 
     //printer.write("Hello World!"); // why doesn't this exist?!
-    printer.feed_n(3).unwrap();
+    printer.run_test().expect("selftest failed!");
+    printer.feed_n(3).expect("feed failed!");
     printer.flush().unwrap();
-
-    println!("Hello, world!");
 }

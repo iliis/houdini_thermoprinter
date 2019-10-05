@@ -1,0 +1,8 @@
+[package]
+name = "houdini_thermoprinter"
+version = "0.1.0"
+authors = ["Samuel Bryner <samuelbryner@gmx.ch>"]
+edition = "2018"
+
+[dependencies]
+thermal_printer = { version = "0.1.1", path = "./libraries/thermal_printer" }

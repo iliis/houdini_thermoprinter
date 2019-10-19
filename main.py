@@ -18,7 +18,7 @@ class ScalePrintingApp(Application):
 
 
     def on_print_weight(self, packet):
-        log.info("got a command to print! weight:", packet['weight'])
+        log.info(f"got a command to print! weight: {packet['weight']}")
 
         if not 'show_only' in packet:
             packet['show_only'] = False

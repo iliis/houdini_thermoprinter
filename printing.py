@@ -38,7 +38,7 @@ def get_and_increment_counter():
     try:
         with open('counter.txt', 'r') as f:
             counter = int(f.readline())
-            log.info("got counter from file:", counter)
+            log.info(f"got counter from file: {counter}")
     except FileNotFoundError:
         counter = 0
         log.warning("no counter value file found, resetting to 0")
@@ -85,7 +85,7 @@ def print_weight(weight, show_only=False, save_as_image=True):
     # and we always want all the digits after the decimal points even if they are zero
 
     if weight < 0:
-        log.warning("WARNING: Not printing negative weight", weight)
+        log.warning("Not printing negative weight: {weight}")
         weight = 0
 
     # number of digits left of the decimal point

@@ -10,17 +10,17 @@ import time
 import traceback
 import signal
 
-#from helpers import *
-from houdinilib.management_interface import ManagementInterface
-
-
-log = logging.getLogger('application')
+# configure logger before importing modules that use it
+log = logging.getLogger("root")
 hdlr = logging.StreamHandler(stream=sys.stdout)
-formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+formatter = logging.Formatter('%(asctime)s [%(module)s] %(levelname)s: %(message)s')
 hdlr.setFormatter(formatter)
 log.addHandler(hdlr)
 log.setLevel(logging.DEBUG)
 
+
+#from helpers import *
+from houdinilib.management_interface import ManagementInterface
 
 
 def git_cmd(params):

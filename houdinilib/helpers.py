@@ -4,7 +4,7 @@ from enum import Enum
 import json
 import logging
 
-log = logging.getLogger('puzzle')
+log = logging.getLogger('root')
 
 class EnumEncoder(json.JSONEncoder):
     def default(self, obj):

@@ -8,7 +8,7 @@ import traceback
 from houdinilib.waitable_timer import WaitableTimer
 from houdinilib.helpers import *
 
-log = logging.getLogger('puzzle')
+log = logging.getLogger('root')
 
 NETWORK_DELAY = 1 # in seconds
 

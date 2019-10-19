@@ -8,7 +8,7 @@ import logging
 
 from PIL import Image, ImageDraw, ImageFont
 
-log = logging.getLogger('printing')
+log = logging.getLogger('root')
 
 # based on https://stackoverflow.com/a/434328
 def chunker(seq, size):

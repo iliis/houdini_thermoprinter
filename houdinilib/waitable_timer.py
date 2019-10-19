@@ -5,7 +5,7 @@ import traceback
 
 from houdinilib.waitable_event import WaitableEvent
 
-log = logging.getLogger('puzzle')
+log = logging.getLogger('root')
 
 class WaitableTimer(WaitableEvent):
 

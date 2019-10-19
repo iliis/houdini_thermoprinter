@@ -7,7 +7,7 @@ from houdinilib.app import Application
 
 from printing import print_weight
 
-log = logging.getLogger('printing')
+log = logging.getLogger('root')
 
 
 class ScalePrintingApp(Application):

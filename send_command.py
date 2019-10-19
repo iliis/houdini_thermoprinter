@@ -54,6 +54,7 @@ for param in args.parameters:
     key, value = param.split('=')
     if key in cmd:
         print(f"Warning: Overwriting existing parameter {key} = '{cmd[key]}' with 'value'")
+    value = value.replace('\\n', '\n')
     cmd[key] = value
 
 send(cmd)

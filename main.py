@@ -5,7 +5,7 @@ import logging
 
 from houdinilib.app import Application
 
-from printing import print_weight
+from printing import print_weight, print_text
 
 log = logging.getLogger('root')
 
@@ -15,6 +15,7 @@ class ScalePrintingApp(Application):
         super(ScalePrintingApp, self).__init__()
 
         self.mi.register_handler("print_weight", self.on_print_weight)
+        self.mi.register_handler("print_text",   self.on_print_text)
 
 
     def on_print_weight(self, packet):
@@ -27,6 +28,10 @@ class ScalePrintingApp(Application):
             packet['save_as_image'] = False
 
         print_weight(float(packet['weight']), bool(packet['show_only']), bool(packet['save_as_image']))
+
+    def on_print_text(self, packet):
+        log.info(f"printing arbitrary text: {packet['text']}")
+        print_text(packet['text'])
 
 if __name__ == "__main__":
     # quick hack to access files using relative pathnames

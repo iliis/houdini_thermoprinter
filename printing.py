@@ -8,6 +8,8 @@ import logging
 
 from PIL import Image, ImageDraw, ImageFont
 
+from houdinilib.helpers import layout_text
+
 log = logging.getLogger('root')
 
 # based on https://stackoverflow.com/a/434328
@@ -30,7 +32,7 @@ def print_image(printer, image):
     for chunk in chunker(image_data, 20*48):
         header(int(len(chunk)/48))
         printer.write(chunk)
-        time.sleep(0.1)
+        #time.sleep(0.1)
 
 
 def get_and_increment_counter():
@@ -54,9 +56,16 @@ def draw_text_rightaligned(draw, xy, text, font):
     width, height = draw.textsize(text, font)
     draw.text((xy[0]-width, xy[1]), text, font=font)
 
-def print_weight(weight, show_only=False, save_as_image=True):
-
+def get_logo():
     logo = Image.open("logo.png")
+    buf = Image.new("1", (384, logo.size[1]), 1)
+    draw = ImageDraw.Draw(buf)
+    draw.bitmap((0,0), logo)
+    return buf
+
+
+
+def print_weight(weight, show_only=False, save_as_image=True):
 
     img = Image.new("1", (384, 330), 1)
 
@@ -72,10 +81,6 @@ def print_weight(weight, show_only=False, save_as_image=True):
     font_text_normal   = ImageFont.truetype(font2, size=33)
 
     y = 0
-
-    draw.bitmap((0,y), logo)
-
-    y += 50
 
     #draw.text((0,y), "Trudi's Allerlei", font=font_text_normal, align="left")
     #y += 40
@@ -123,11 +128,25 @@ def print_weight(weight, show_only=False, save_as_image=True):
         return
 
     with open("/dev/usb/lp0", "wb") as printer:
+        print_image(printer, get_logo())
         print_image(printer, img)
-        printer.write(b"\n\n\n")
+        printer.write(b"\n\n")
         #printer.write(bytearray([27, ord('d'), 50])) # feed N
+
+def print_text(text):
+    with open("/dev/usb/lp0", "wb") as printer:
+        log.debug(f"raw text: '{text}'")
+        text = text.replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue')
+
+        print_image(printer, get_logo())
+        printer.write(b"\n\n")
+        printer.write( ("\n".join(layout_text(text, 32))).encode('utf8') )
+        printer.write(b" \n \n \n \n \n")
+
 
 
 
 if __name__ == "__main__":
-    print_weight(0.01, show_only=False, save_as_image=True)
+    #print_weight(0.01, show_only=False, save_as_image=True)
+
+    print_text("hallo welt")

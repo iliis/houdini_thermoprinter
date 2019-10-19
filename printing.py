@@ -133,20 +133,45 @@ def print_weight(weight, show_only=False, save_as_image=True):
         printer.write(b"\n\n")
         #printer.write(bytearray([27, ord('d'), 50])) # feed N
 
-def print_text(text):
+def print_text_raw(text):
     with open("/dev/usb/lp0", "wb") as printer:
         log.debug(f"raw text: '{text}'")
-        text = text.replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue')
 
         print_image(printer, get_logo())
         printer.write(b"\n\n")
-        printer.write( ("\n".join(layout_text(text, 32))).encode('utf8') )
+        #printer.write(bytearray([0x18, 0x74, 115]))
+        printer.write(bytearray([0x1B, 0x74, 3]))
+        #printer.write( ("\n".join(layout_text(text, 32))).encode('utf8') )
+        printer.write(bytearray([i for i in range(50, 256)]))
         printer.write(b" \n \n \n \n \n")
 
+def print_text(text):
+    with open("/dev/usb/lp0", "wb") as printer:
+        padding_top = 20
 
+        print_image(printer, get_logo())
+
+        font = ImageFont.truetype('fonts/Blender-Book.otf', size=33)
+
+        # measure how long our text will be in pixels
+        img = Image.new("1", (384, 100), 1)
+        draw = ImageDraw.Draw(img)
+        # why can't I call this without having a picture first??
+        tw, th = draw.textsize(text, font=font)
+
+        # create image with the correct size
+        img = Image.new("1", (384, th+padding_top), 1)
+        draw = ImageDraw.Draw(img)
+
+        draw.multiline_text((0,padding_top), text, font=font)
+
+        img.save("test.png")
+
+        print_image(printer, img)
+        printer.write(b" \n\n\n\n")
 
 
 if __name__ == "__main__":
     #print_weight(0.01, show_only=False, save_as_image=True)
 
-    print_text("hallo welt")
+    print_text("hallo welt äöüÄÖÜ")

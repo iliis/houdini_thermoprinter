@@ -30,25 +30,29 @@ def print_image(printer, image):
         time.sleep(0.1)
 
 if __name__ == "__main__":
-    i = Image.new("1", (1450, 384), 1)
+    i = Image.new("1", (384, 300), 1)
+
+    # Fass Gewichte: 8 und 8.5kg
 
     draw = ImageDraw.Draw(i)
 
-    font_weight_big    = ImageFont.truetype('/home/samuel/.fonts/Blender/Blender-Heavy.otf', size=610)
-    font_weight_medium = ImageFont.truetype('/home/samuel/.fonts/Blender/Blender-Heavy.otf', size=300)
+    font_weight_big    = ImageFont.truetype('/home/samuel/.fonts/Blender/Blender-Heavy.otf', size=98) #118)
+    font_weight_medium = ImageFont.truetype('/home/samuel/.fonts/Blender/Blender-Heavy.otf', size=50)
     font_text_normal   = ImageFont.truetype('/home/samuel/.fonts/Blender/Blender-Book.otf', size=36)
 
-    draw.text((0,-150), "58.4", font=font_weight_big, align="left")
-    draw.text((1120, 118), "KG", font=font_weight_medium)
+    weight = 8.4234232
 
-    draw.text((1200,   0), "19. Oktober 1970\n14:33.92", font=font_text_normal, align="right")
-    draw.text((1218, 90), "Gerät #43839\nWägung 394020", font=font_text_normal, align="right")
+    draw.text((-1,-25), f"{weight:07.4f}", font=font_weight_big, align="left")
+    draw.text((332, 16), "KG", font=font_weight_medium)
+
+    draw.text((0, 80), "19. Oktober 1970\n14:33.92", font=font_text_normal, align="left")
+    draw.text((0, 170), "Gerät #43839\nWägung 394020", font=font_text_normal, align="left")
 
     i.save("test.png")
 
-    #sys.exit(0)
+    sys.exit(0)
 
-    i = i.transpose(Image.ROTATE_270)
+    #i = i.transpose(Image.ROTATE_270)
 
     with open("/dev/usb/lp0", "wb") as printer:
         print_image(printer, i)

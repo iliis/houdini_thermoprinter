@@ -2,6 +2,7 @@
 
 import sys
 import time
+from datetime import datetime
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -29,8 +30,29 @@ def print_image(printer, image):
         printer.write(chunk)
         time.sleep(0.1)
 
+
+def get_and_increment_counter():
+
+    try:
+        with open('counter.txt', 'r') as f:
+            counter = int(f.readline())
+            print("got counter from file:", counter)
+    except FileNotFoundError:
+        counter = 0
+        print("no counter value file found, resetting to 0")
+
+    counter += 1
+
+    with open('counter.txt', 'w') as f:
+        f.write(str(counter))
+
+    return counter
+
 if __name__ == "__main__":
-    i = Image.new("1", (384, 300), 1)
+
+    logo = Image.open("logo.png")
+
+    i = Image.new("1", (384, 330), 1)
 
     # Fass Gewichte: 8 und 8.5kg
 
@@ -39,18 +61,40 @@ if __name__ == "__main__":
     font  = "/home/samuel/.fonts/Hoefler/Tungsten_Complete/OpenType/TungstenNarrow-Light.otf"
     font2 = '/home/samuel/.fonts/Blender/Blender-Heavy.otf'
     font3 = '/home/samuel/.fonts/Blender/Blender-Book.otf'
+    #font4 = '/home/samuel/.fonts/Hoefler/Hoelfer Text/HoeflerText-Black-Italic-Swash.otf'
+    font4 = '/home/samuel/.fonts/Hoefler/Hoelfer Text/HoeflerText-Italic-Swash.otf'
+
 
     font_weight_big    = ImageFont.truetype(font, size=200)
     font_weight_medium = ImageFont.truetype(font, size=110)
-    font_text_normal   = ImageFont.truetype(font3, size=36)
+    font_text_normal   = ImageFont.truetype(font3, size=33)
 
     weight = 8.4234232
 
-    draw.text((35,0), f"{weight:6.3f}", font=font_weight_big, align="left")
-    draw.text((320, 70), "KG", font=font_weight_medium)
+    y = 0
 
-    draw.text((0, 190), "19. Oktober 1970\n14:33.92", font=font_text_normal, align="left")
-    #draw.text((0, 170), "Gerät #43839\nWägung 394020", font=font_text_normal, align="left")
+    draw.bitmap((0,y), logo)
+
+    y += 50
+
+    #draw.text((0,y), "Trudi's Allerlei", font=font_text_normal, align="left")
+    #y += 40
+
+    draw.text((35, y), f"{weight:6.3f}", font=font_weight_big, align="left")
+    draw.text((320, y+70), "KG", font=font_weight_medium)
+
+    y += 190
+
+    now = datetime.now()
+
+    timestr = now.strftime("%d. %B 1985, %H:%M:%S")
+
+    draw.text((0, y), timestr, font=font_text_normal, align="left")
+    y += 40
+
+    counter = get_and_increment_counter()
+
+    draw.text((0, y), f"Gerät #438, Wägung #{counter}", font=font_text_normal, align="left")
 
     i.save("test.png")
 
@@ -60,4 +104,4 @@ if __name__ == "__main__":
 
     with open("/dev/usb/lp0", "wb") as printer:
         print_image(printer, i)
-        printer.write(bytearray([27, ord('d'), 7])) # feed N
+        printer.write(bytearray([27, ord('d'), 5])) # feed N

@@ -27,7 +27,7 @@ def print_image(printer, image):
     # invert data: 0 = black in image -> must be 1 to print "ink"
     image_data = bytearray(0xFF & (0xFF ^ d) for d in image.tobytes())
 
-    for chunk in chunker(image_data, 200*48):
+    for chunk in chunker(image_data, 20*48):
         header(int(len(chunk)/48))
         printer.write(chunk)
         time.sleep(0.1)
@@ -124,9 +124,10 @@ def print_weight(weight, show_only=False, save_as_image=True):
 
     with open("/dev/usb/lp0", "wb") as printer:
         print_image(printer, img)
-        printer.write(bytearray([27, ord('d'), 5])) # feed N
+        printer.write(b"\n\n\n")
+        #printer.write(bytearray([27, ord('d'), 50])) # feed N
 
 
 
 if __name__ == "__main__":
-    print_weight(0.01, show_only=True, save_as_image=True)
+    print_weight(0.01, show_only=False, save_as_image=True)

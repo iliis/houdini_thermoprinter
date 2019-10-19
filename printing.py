@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import math
 import sys
 import time
 from datetime import datetime
@@ -78,12 +79,24 @@ def print_weight(weight, show_only=False, save_as_image=True):
     #draw.text((0,y), "Trudi's Allerlei", font=font_text_normal, align="left")
     #y += 40
 
-    # we want 5 significant digits in total
-    # but we also want at least one digit before the decimal point
-    if weight >= 1:
-        weight_str = f"{weight:.5g}"
-    else:
+    # we want 5 digits in total
+    # we also want at least one digit before the decimal point
+    # and we always want all the digits after the decimal points even if they are zero
+
+    if weight < 0:
+        print("WARNING: Not printing negative weight", weight)
+        weight = 0
+
+    # number of digits left of the decimal point
+    num_digits = max(0, int(math.log10(weight))) + 1
+
+    if num_digits > 5:
+        weight_str = f"99999"
+        fmt = 0
+    elif num_digits == 0:
         weight_str = f"{weight:.4f}"
+    else:
+        weight_str = f"{weight:.{5-num_digits}f}"
 
     draw_text_rightaligned(draw, (315, y), weight_str, font_weight_big)
 
@@ -111,3 +124,8 @@ def print_weight(weight, show_only=False, save_as_image=True):
     with open("/dev/usb/lp0", "wb") as printer:
         print_image(printer, img)
         printer.write(bytearray([27, ord('d'), 5])) # feed N
+
+
+
+if __name__ == "__main__":
+    print_weight(0.01, show_only=True, save_as_image=True)

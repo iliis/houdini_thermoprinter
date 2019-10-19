@@ -1,2 +1,5 @@
 counter.txt
 test.png
+__pycache__
+*.pyc
+*.log

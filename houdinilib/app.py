@@ -13,14 +13,9 @@ import signal
 #from helpers import *
 from houdinilib.management_interface import ManagementInterface
 
-# make sure logfile doesn't grow unboundedly
-if os.path.exists("application.log") and os.path.getsize("application.log") > 1024*1024*10: # limit: 10MB
-    print("[{}] deleting huge logfile".format(datetime.datetime.now()))
-    os.remove("application.log")
-
 
 log = logging.getLogger('application')
-hdlr = logging.FileHandler('application.log')
+hdlr = logging.StreamHandler(stream=sys.stdout)
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 hdlr.setFormatter(formatter)
 log.addHandler(hdlr)
@@ -82,6 +77,7 @@ class Application:
 
     def run(self):
         self.is_running = True
+        log.info("Application is running.")
 
         while self.is_running:
             events = self.sel.select()

@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 
+import logging
+
 from houdinilib.app import Application
 
 from printing import print_weight
+
+log = logging.getLogger('printing')
+
 
 class ScalePrintingApp(Application):
     def __init__(self):
@@ -12,8 +17,7 @@ class ScalePrintingApp(Application):
 
 
     def on_print_weight(self, packet):
-        print("got a packet!")
-        print("weight:", packet['weight'])
+        log.info("got a command to print! weight:", packet['weight'])
 
         if not 'show_only' in packet:
             packet['show_only'] = False

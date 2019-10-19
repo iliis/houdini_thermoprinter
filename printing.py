@@ -4,9 +4,11 @@ import math
 import sys
 import time
 from datetime import datetime
+import logging
 
 from PIL import Image, ImageDraw, ImageFont
 
+log = logging.getLogger('printing')
 
 # based on https://stackoverflow.com/a/434328
 def chunker(seq, size):
@@ -15,7 +17,6 @@ def chunker(seq, size):
 
 def print_image(printer, image):
     def header(h):
-        #print(f"printing {h} lines")
         w = 48 # 48 bytes per line = 384 pixels
         printer.write(bytearray([
             29, 0x76, 0x30,
@@ -37,10 +38,10 @@ def get_and_increment_counter():
     try:
         with open('counter.txt', 'r') as f:
             counter = int(f.readline())
-            print("got counter from file:", counter)
+            log.info("got counter from file:", counter)
     except FileNotFoundError:
         counter = 0
-        print("no counter value file found, resetting to 0")
+        log.warning("no counter value file found, resetting to 0")
 
     counter += 1
 
@@ -84,7 +85,7 @@ def print_weight(weight, show_only=False, save_as_image=True):
     # and we always want all the digits after the decimal points even if they are zero
 
     if weight < 0:
-        print("WARNING: Not printing negative weight", weight)
+        log.warning("WARNING: Not printing negative weight", weight)
         weight = 0
 
     # number of digits left of the decimal point

@@ -3,6 +3,7 @@
 import sys
 import time
 from datetime import datetime
+import locale
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -48,7 +49,14 @@ def get_and_increment_counter():
 
     return counter
 
+def draw_text_rightaligned(draw, xy, text, font):
+    width, height = draw.textsize(text, font)
+    draw.text((xy[0]-width, xy[1]), text, font=font)
+
 if __name__ == "__main__":
+
+    # print date (month) in german
+    locale.setlocale(locale.LC_TIME, "de_DE")
 
     logo = Image.open("logo.png")
 
@@ -65,7 +73,7 @@ if __name__ == "__main__":
     font_weight_medium = ImageFont.truetype(font1, size=110)
     font_text_normal   = ImageFont.truetype(font2, size=33)
 
-    weight = 8.4234232
+    weight = 403.234232
 
     y = 0
 
@@ -76,8 +84,16 @@ if __name__ == "__main__":
     #draw.text((0,y), "Trudi's Allerlei", font=font_text_normal, align="left")
     #y += 40
 
-    draw.text((35, y), f"{weight:6.3f}", font=font_weight_big, align="left")
-    draw.text((320, y+70), "KG", font=font_weight_medium)
+    # we want 5 significant digits in total
+    # but we also want at least one digit before the decimal point
+    if weight >= 1:
+        weight_str = f"{weight:.5g}"
+    else:
+        weight_str = f"{weight:.4f}"
+
+    draw_text_rightaligned(draw, (315, y), weight_str, font_weight_big)
+
+    draw.text((323, y+70), "KG", font=font_weight_medium)
 
     y += 190
 
@@ -94,9 +110,8 @@ if __name__ == "__main__":
 
     i.save("test.png")
 
-    #sys.exit(0)
-
-    #i = i.transpose(Image.ROTATE_270)
+    # uncomment to not print anything ;)
+    sys.exit(0)
 
     with open("/dev/usb/lp0", "wb") as printer:
         print_image(printer, i)

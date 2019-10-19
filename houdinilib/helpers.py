@@ -74,7 +74,7 @@ def layout_line(line, max_width):
         return [line]
     else:
         # find optimal break-points
-        #log.info('fitting line "{}" into {} characters'.format(line, max_width))
+        log.debug('fitting line "{}" into {} characters'.format(line, max_width))
         lines = []
         cur_line = ""
 
@@ -83,7 +83,7 @@ def layout_line(line, max_width):
         while True:
 
             if len(cur_line) >= max_width:
-                #log.info(' --> appending very long cur_line = "{}"'.format(cur_line))
+                log.debug(' --> appending very long cur_line = "{}"'.format(cur_line))
                 lines.append(cur_line)
                 cur_line = ""
             elif len(cur_line) > 0:
@@ -94,23 +94,23 @@ def layout_line(line, max_width):
                     lines.append(cur_line)
                 break
 
-            #log.info(' --> trying to append word "{}"'.format(words[0]))
+            log.debug(' --> trying to append word "{}"'.format(words[0]))
             if len(cur_line) + len(words[0]) > max_width:
                 if len(words[0]) > max_width:
                     # break very long words into multiple lines if necessary
-                    #log.info('splitting very long word "{}"'.format(words[0]))
+                    log.debug('splitting very long word "{}"'.format(words[0]))
                     l = max_width - len(cur_line)
                     cur_line += words[0][:l]
                     words[0]  = words[0][l:]
 
                 lines.append(cur_line)
-                #log.info('     --> too long for current line, waiting for next one')
-                #log.info('     --> appending prev cur_line = "{}"'.format(cur_line))
+                log.debug('     --> too long for current line, waiting for next one')
+                log.debug('     --> appending prev cur_line = "{}"'.format(cur_line))
                 cur_line = ""
             else:
                 cur_line += words[0]
                 del words[0]
-                #log.info('     --> appending... cur_line = "{}"'.format(cur_line))
+                log.debug('     --> appending... cur_line = "{}"'.format(cur_line))
 
         return lines
 

@@ -6,6 +6,8 @@ import time
 from datetime import datetime
 import logging
 
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+
 from PIL import Image, ImageDraw, ImageFont
 
 from houdinilib.helpers import layout_text
@@ -151,13 +153,31 @@ def print_text(text):
 
         print_image(printer, get_logo())
 
-        font = ImageFont.truetype('fonts/Blender-Book.otf', size=33)
+        font = ImageFont.truetype('fonts/Blender-Book.otf', size=37)
+
 
         # measure how long our text will be in pixels
         img = Image.new("1", (384, 100), 1)
         draw = ImageDraw.Draw(img)
-        # why can't I call this without having a picture first??
-        tw, th = draw.textsize(text, font=font)
+
+        max_length = 50
+        tw = 10000
+
+        log.debug(f"layouting text with {len(text)} chars")
+
+        while tw > img.size[0] and max_length > 10:
+
+            # keep line length in check (this assumes a monospaced font, which we don't have!0
+            log.debug(f"testing layouting text with {len(text)} chars {max_length}")
+            layouted_text = "\n".join(layout_text(text, max_length))
+
+            # why can't I call this without having a picture first??
+            tw, th = draw.textsize(layouted_text, font=font)
+
+            max_length -= 1
+
+        text = layouted_text
+        log.debug(f"wrapped text with max_length = {max_length+1} chars = {tw} px -> {th} high")
 
         # create image with the correct size
         img = Image.new("1", (384, th+padding_top), 1)
@@ -174,4 +194,4 @@ def print_text(text):
 if __name__ == "__main__":
     #print_weight(0.01, show_only=False, save_as_image=True)
 
-    print_text("hallo welt äöüÄÖÜ")
+    print_text("hallo welt äöüÄÖÜ asdif sa ifdsahfiew hfawuf hasd hfsa yfhsa ygfsa yfgsa yfusayfeweureg iasdid j jdsksk dsal dsl dsl dl dl dl dl dl dl dl dl dl dldiei aijdsdsahu ehuahudshudsu da dshu dsh dhu duh")

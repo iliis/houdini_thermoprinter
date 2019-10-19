@@ -36,21 +36,25 @@ if __name__ == "__main__":
 
     draw = ImageDraw.Draw(i)
 
-    font_weight_big    = ImageFont.truetype('/home/samuel/.fonts/Blender/Blender-Heavy.otf', size=98) #118)
-    font_weight_medium = ImageFont.truetype('/home/samuel/.fonts/Blender/Blender-Heavy.otf', size=50)
-    font_text_normal   = ImageFont.truetype('/home/samuel/.fonts/Blender/Blender-Book.otf', size=36)
+    font  = "/home/samuel/.fonts/Hoefler/Tungsten_Complete/OpenType/TungstenNarrow-Light.otf"
+    font2 = '/home/samuel/.fonts/Blender/Blender-Heavy.otf'
+    font3 = '/home/samuel/.fonts/Blender/Blender-Book.otf'
+
+    font_weight_big    = ImageFont.truetype(font, size=200)
+    font_weight_medium = ImageFont.truetype(font, size=110)
+    font_text_normal   = ImageFont.truetype(font3, size=36)
 
     weight = 8.4234232
 
-    draw.text((-1,-25), f"{weight:07.4f}", font=font_weight_big, align="left")
-    draw.text((332, 16), "KG", font=font_weight_medium)
+    draw.text((35,0), f"{weight:6.3f}", font=font_weight_big, align="left")
+    draw.text((320, 70), "KG", font=font_weight_medium)
 
-    draw.text((0, 80), "19. Oktober 1970\n14:33.92", font=font_text_normal, align="left")
-    draw.text((0, 170), "Gerät #43839\nWägung 394020", font=font_text_normal, align="left")
+    draw.text((0, 190), "19. Oktober 1970\n14:33.92", font=font_text_normal, align="left")
+    #draw.text((0, 170), "Gerät #43839\nWägung 394020", font=font_text_normal, align="left")
 
     i.save("test.png")
 
-    sys.exit(0)
+    #sys.exit(0)
 
     #i = i.transpose(Image.ROTATE_270)
 

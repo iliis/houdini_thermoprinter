@@ -3,7 +3,6 @@
 import sys
 import time
 from datetime import datetime
-import locale
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -54,9 +53,6 @@ def draw_text_rightaligned(draw, xy, text, font):
     draw.text((xy[0]-width, xy[1]), text, font=font)
 
 def print_weight(weight, show_only=False, save_as_image=True):
-
-    # print date (month) in german
-    locale.setlocale(locale.LC_TIME, "de_DE")
 
     logo = Image.open("logo.png")
 

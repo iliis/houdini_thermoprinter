@@ -58,16 +58,12 @@ if __name__ == "__main__":
 
     draw = ImageDraw.Draw(i)
 
-    font  = "/home/samuel/.fonts/Hoefler/Tungsten_Complete/OpenType/TungstenNarrow-Light.otf"
-    font2 = '/home/samuel/.fonts/Blender/Blender-Heavy.otf'
-    font3 = '/home/samuel/.fonts/Blender/Blender-Book.otf'
-    #font4 = '/home/samuel/.fonts/Hoefler/Hoelfer Text/HoeflerText-Black-Italic-Swash.otf'
-    font4 = '/home/samuel/.fonts/Hoefler/Hoelfer Text/HoeflerText-Italic-Swash.otf'
+    font1  = 'fonts/TungstenNarrow-Light.otf'
+    font2 = 'fonts/Blender-Book.otf'
 
-
-    font_weight_big    = ImageFont.truetype(font, size=200)
-    font_weight_medium = ImageFont.truetype(font, size=110)
-    font_text_normal   = ImageFont.truetype(font3, size=33)
+    font_weight_big    = ImageFont.truetype(font1, size=200)
+    font_weight_medium = ImageFont.truetype(font1, size=110)
+    font_text_normal   = ImageFont.truetype(font2, size=33)
 
     weight = 8.4234232
 

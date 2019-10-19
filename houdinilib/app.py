@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import curses
 import json
 import logging
@@ -59,6 +59,8 @@ class Application:
 
         self.mi.register_handler('quit', self.exit_app_by_packet)
         self.mi.register_handler('shutdown', self.shutdown)
+        self.mi.register_handler('ping', self.answer_ping)
+        self.mi.register_handler('get_time', self.answer_ping)
 
     def __del__(self):
         self.exit()
@@ -84,4 +86,8 @@ class Application:
             for key, mask in events:
                 callback = key.data
                 callback(key.fileobj)
+
+    def answer_ping(self, packet):
+        timestr = datetime.now().strftime("%d. %B %Y, %H:%M:%S")
+        return self.mi.reply_success(packet, timestr)
 

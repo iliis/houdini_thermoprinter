@@ -28,10 +28,14 @@ class ScalePrintingApp(Application):
             packet['save_as_image'] = False
 
         print_weight(float(packet['weight']), bool(packet['show_only']), bool(packet['save_as_image']))
+        log.info("done printing...")
+        return None
 
     def on_print_text(self, packet):
         log.info(f"printing arbitrary text: {packet['text']}")
         print_text(packet['text'])
+        log.info("done printing...")
+        return None
 
 if __name__ == "__main__":
     # quick hack to access files using relative pathnames

@@ -46,6 +46,9 @@ def get_and_increment_counter():
     except FileNotFoundError:
         counter = 0
         log.warning("no counter value file found, resetting to 0")
+    except Exception as e:
+        counter = 0
+        log.error("Something went wrong when reading the counter file: {}".format(e))
 
     counter += 1
 

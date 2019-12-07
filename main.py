@@ -14,8 +14,8 @@ class ScalePrintingApp(Application):
     def __init__(self):
         super(ScalePrintingApp, self).__init__()
 
-        self.mi.register_handler("print_weight", self.on_print_weight)
-        self.mi.register_handler("print_text",   self.on_print_text)
+        self.mi.register_handler("print_weight", self.on_print_weight, 2)
+        self.mi.register_handler("print_text",   self.on_print_text, 2)
 
 
     def on_print_weight(self, packet):
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     # importlib.resources, but that seems unnecessarily complicated for our
     # case (we won't be deploying this application as a zipped egg file)
     main_dir = os.path.dirname(__file__)
-    if main_dir and not main_dir.empty():
+    if main_dir and main_dir != "":
         os.chdir(main_dir)
 
     ScalePrintingApp().run()

@@ -4,6 +4,7 @@ import logging
 import selectors
 import json
 import traceback
+import threading
 
 from houdinilib.waitable_timer import WaitableTimer
 from houdinilib.helpers import *
@@ -139,14 +140,16 @@ class ManagementInterface:
         self.connections = []
 
         self.handlers = {}
+        self.timeouts = {}
 
         self.new_connection_handler = None
 
     # handler should take one parameter: the packet
     # handler can return a full response-packet (use reply_success/_failure()
     # helpers) or raise an exception upon error
-    def register_handler(self, command, handler):
+    def register_handler(self, command, handler, timeout=None):
         self.handlers[command] = handler
+        self.timeouts[command] = timeout
 
     def __del__(self):
         log.info('closing server connection')
@@ -221,6 +224,8 @@ class ManagementInterface:
                 'error':    error,
                 'reply_to': orig_pkt,
                 }
+    def timeout(self):
+        raise Exception("timeout!!!")
 
     def handle_packet(self, packet, conn):
 
@@ -235,7 +240,12 @@ class ManagementInterface:
         if 'command' in payload:
             cmd = payload['command'].lower()
             if cmd in self.handlers:
+                timeout_timer = None
                 try:
+                    if cmd in self.timeouts and self.timeouts[cmd]:
+                        timeout_timer = threading.Timer(self.timeouts[cmd], self.timeout)
+                        timeout_timer.start()
+
                     reply = self.handlers[cmd](payload)
                 except Exception as e:
                     log.error("failed to execute packet handler: Got Exception:\n{}\n{}".format(e, traceback.format_exc()))
@@ -243,6 +253,9 @@ class ManagementInterface:
                     reply['exception'] = str(e)
                     reply['exception_type'] = str(e.__class__.__name__)
                     reply['traceback'] = traceback.format_exc()
+
+                if timeout_timer:
+                    timeout_timer.cancel()
 
                 # assume handler executed successfully if it doesn't return any response
                 if not reply:

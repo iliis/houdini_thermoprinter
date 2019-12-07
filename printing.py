@@ -101,15 +101,15 @@ def print_weight(weight, show_only=False, save_as_image=True):
     # number of digits left of the decimal point
     num_digits = max(0, int(math.log10(weight))) + 1
 
-    if num_digits > 5:
-        weight_str = f"99999"
+    if num_digits > 4:
+        weight_str = f"9999"
         fmt = 0
     elif num_digits == 0:
-        weight_str = f"{weight:.4f}"
+        weight_str = f"{weight:.3f}"
     else:
-        weight_str = f"{weight:.{5-num_digits}f}"
+        weight_str = f"{weight:.{4-num_digits}f}"
 
-    draw_text_rightaligned(draw, (319, y), weight_str, font_weight_big)
+    draw_text_rightaligned(draw, (310, y), weight_str, font_weight_big)
 
     draw.text((323, y+70), "KG", font=font_weight_medium)
 

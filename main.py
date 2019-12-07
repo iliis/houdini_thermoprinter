@@ -42,6 +42,8 @@ if __name__ == "__main__":
     # I think the real proper way to do this would be to use
     # importlib.resources, but that seems unnecessarily complicated for our
     # case (we won't be deploying this application as a zipped egg file)
-    os.chdir(os.path.dirname(__file__))
+    main_dir = os.path.dirname(__file__)
+    if main_dir and not main_dir.empty():
+        os.chdir(main_dir)
 
     ScalePrintingApp().run()

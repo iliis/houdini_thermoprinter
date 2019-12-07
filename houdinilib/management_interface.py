@@ -5,6 +5,7 @@ import selectors
 import json
 import traceback
 import threading
+import _thread
 
 from houdinilib.waitable_timer import WaitableTimer
 from houdinilib.helpers import *
@@ -224,8 +225,6 @@ class ManagementInterface:
                 'error':    error,
                 'reply_to': orig_pkt,
                 }
-    def timeout(self):
-        raise Exception("timeout!!!")
 
     def handle_packet(self, packet, conn):
 
@@ -243,7 +242,7 @@ class ManagementInterface:
                 timeout_timer = None
                 try:
                     if cmd in self.timeouts and self.timeouts[cmd]:
-                        timeout_timer = threading.Timer(self.timeouts[cmd], self.timeout)
+                        timeout_timer = threading.Timer(self.timeouts[cmd], _thread.interrupt_main)
                         timeout_timer.start()
 
                     reply = self.handlers[cmd](payload)

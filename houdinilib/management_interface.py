@@ -240,12 +240,20 @@ class ManagementInterface:
             cmd = payload['command'].lower()
             if cmd in self.handlers:
                 timeout_timer = None
+                timeout_t = None
                 try:
                     if cmd in self.timeouts and self.timeouts[cmd]:
-                        timeout_timer = threading.Timer(self.timeouts[cmd], _thread.interrupt_main)
+                        timeout_t = self.timeouts[cmd]
+                        timeout_timer = threading.Timer(timeout_t, _thread.interrupt_main)
                         timeout_timer.start()
 
                     reply = self.handlers[cmd](payload)
+                except KeyboardInterrupt as e:
+                    log.error("Timeout in packet handler execution")
+                    reply = self.reply_failure(payload, "Timeout of {} seconds expired".format(timeout_t), retval='timeout')
+                    reply['exception'] = str(e)
+                    reply['exception_type'] = "timeout"
+                    reply['traceback'] = traceback.format_exc()
                 except Exception as e:
                     log.error("failed to execute packet handler: Got Exception:\n{}\n{}".format(e, traceback.format_exc()))
                     reply = self.reply_failure(payload, "Exception: {}".format(e), retval='exception')

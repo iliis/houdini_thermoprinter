@@ -109,6 +109,8 @@ def print_weight(weight, show_only=False, save_as_image=True):
     else:
         weight_str = f"{weight:.{4-num_digits}f}"
 
+    log.info("Printing weight {} as string: '{}' (num_digits: {}".format(weight, weight_str, num_digits))
+
     draw_text_rightaligned(draw, (310, y), weight_str, font_weight_big)
 
     draw.text((323, y+70), "KG", font=font_weight_medium)

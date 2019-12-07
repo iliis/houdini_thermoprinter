@@ -92,7 +92,7 @@ def print_weight(weight, show_only=False, save_as_image=True):
 
     # we want 5 digits in total
     # we also want at least one digit before the decimal point
-    # and we always want all the digits after the decimal points even if they are zero
+    # and we always want at most three digits after the decimal points even if they are zero
 
     if weight < 0:
         log.warning("Not printing negative weight: {weight}")
@@ -101,13 +101,13 @@ def print_weight(weight, show_only=False, save_as_image=True):
     # number of digits left of the decimal point
     num_digits = max(0, int(math.log10(weight))) + 1
 
-    if num_digits > 4:
-        weight_str = f"9999"
+    if num_digits > 5:
+        weight_str = f"99999"
         fmt = 0
-    elif num_digits == 0:
+    elif num_digits <= 2:
         weight_str = f"{weight:.3f}"
     else:
-        weight_str = f"{weight:.{4-num_digits}f}"
+        weight_str = f"{weight:.{5-num_digits}f}"
 
     log.info("Printing weight {} as string: '{}' (num_digits: {})".format(weight, weight_str, num_digits))
 

@@ -99,7 +99,10 @@ def print_weight(weight, show_only=False, save_as_image=True):
         weight = 0
 
     # number of digits left of the decimal point
-    num_digits = max(0, int(math.log10(weight))) + 1
+    if weight > 0:
+        num_digits = max(0, int(math.log10(weight))) + 1
+    else:
+        num_digits = 1
 
     if num_digits > 5:
         weight_str = f"99999"

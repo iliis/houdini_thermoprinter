@@ -14,8 +14,8 @@ class ScalePrintingApp(Application):
     def __init__(self):
         super(ScalePrintingApp, self).__init__()
 
-        self.mi.register_handler("print_weight", self.on_print_weight, 2)
-        self.mi.register_handler("print_text",   self.on_print_text, 2)
+        self.mi.register_handler("print_weight", self.on_print_weight, 5)
+        self.mi.register_handler("print_text",   self.on_print_text, 5)
 
 
     def on_print_weight(self, packet):

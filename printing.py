@@ -142,6 +142,7 @@ def print_weight(weight, show_only=False, save_as_image=True):
         print_image(printer, img)
         printer.write(b"\n\n")
         #printer.write(bytearray([27, ord('d'), 50])) # feed N
+        printer.write(bytearray([29, ord('V'), 0])) # cut
 
 def print_text_raw(text):
     with open("/dev/usb/lp0", "wb") as printer:
@@ -198,6 +199,7 @@ def print_text(text):
         print_image(printer, img)
         printer.write(b" \n\n\n\n")
 
+        printer.write(bytearray([29, ord('V'), 0])) # cut
 
 if __name__ == "__main__":
     #print_weight(0.01, show_only=False, save_as_image=True)

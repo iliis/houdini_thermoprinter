@@ -24,3 +24,9 @@ Set system locale to de_DE or de_Ch for german output
 put the following line into /etc/rc.locale:
 
     sudo -u pi python3 /home/pi/houdini_thermoprinter/main.py &
+    
+alternatively start as service (automaticaly restarts on error):
+
+    sudo cp printerApp.service /etc/systemd/system/printerApp.service
+    sudo systemctl daemon-reload
+    sudo systemctl restart printerApp.service

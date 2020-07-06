@@ -3,7 +3,7 @@ Description=Print received weight and messages.
 Wants=network-online.target
 After=network.target network-online.target rc-local.service
 [Service]
-ExecStart=sudo -u pi python3 /home/pi/houdini_thermoprinter/main.py &
+ExecStart=python3 /home/pi/houdini_thermoprinter/main.py
 StandardOutput=inherit
 StandardError=inherit
 Restart=always
